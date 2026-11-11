@@ -1,0 +1,4 @@
+<?php
+namespace App\Features\Post\Controllers;
+use App\Http\Controllers\Controller;use App\Features\Post\Contracts\PostRepositoryInterface;use App\Features\Post\Models\Post;use Illuminate\Http\Request;use Inertia\Inertia;
+class PublicPostController extends Controller {public function home(){ $posts=Post::with('user')->where('is_published',true)->latest('published_at')->paginate(6);return Inertia::render('Public/PostIndex',['posts'=>$posts,'featured'=>true]);}public function index(Request $r,PostRepositoryInterface $repo){$filters=$r->only('search','category');return Inertia::render('Public/PostIndex',['posts'=>$repo->publicPosts($filters),'filters'=>$filters]);}public function show(string $slug){$post=Post::with('user')->where('slug',$slug)->where('is_published',true)->firstOrFail();return Inertia::render('Public/PostShow',['post'=>$post]);}}

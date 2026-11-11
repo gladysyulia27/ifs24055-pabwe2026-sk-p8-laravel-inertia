@@ -1,0 +1,21 @@
+#!/usr/bin/env php
+<?php
+
+use Symfony\Component\Console\Input\ArgvInput;
+
+define('LARAVEL_START', microtime(true));
+
+if (! file_exists(__DIR__.'/vendor/autoload.php')) {
+    fwrite(STDOUT, "Menginstal dependency Composer terlebih dahulu...\n");
+    passthru('composer install --no-interaction', $composerStatus);
+    if ($composerStatus !== 0 || ! file_exists(__DIR__.'/vendor/autoload.php')) {
+        fwrite(STDERR, "Gagal menginstal dependency Composer. Jalankan 'composer install' terlebih dahulu.\n");
+        exit(1);
+    }
+}
+
+require __DIR__.'/vendor/autoload.php';
+
+$status = (require_once __DIR__.'/bootstrap/app.php')->handleCommand(new ArgvInput);
+
+exit($status);

@@ -1,0 +1,4 @@
+<?php
+namespace Tests\Feature;
+use Tests\TestCase;use App\Models\User;use Illuminate\Foundation\Testing\RefreshDatabase;
+class AuthenticationTest extends TestCase {use RefreshDatabase;public function test_member_can_register():void{$this->post('/register',['name'=>'Test User','username'=>'testuser','email'=>'test@example.com','password'=>'password123','password_confirmation'=>'password123'])->assertRedirect('/dashboard/posts');$this->assertDatabaseHas('users',['username'=>'testuser','role'=>'member']);}public function test_member_can_login_and_logout():void{$user=User::create(['name'=>'Test','username'=>'tester','email'=>'tester@example.com','password'=>'password123','role'=>'member']);$this->post('/login',['username'=>'tester','password'=>'password123'])->assertRedirect('/dashboard/posts');$this->assertAuthenticatedAs($user);$this->post('/logout')->assertRedirect('/');$this->assertGuest();}}

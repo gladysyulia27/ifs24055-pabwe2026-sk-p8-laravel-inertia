@@ -1,0 +1,1 @@
+export default {content:['./resources/**/*.blade.php','./resources/**/*.jsx'],theme:{extend:{fontFamily:{sans:['Inter','ui-sans-serif','system-ui']},colors:{ink:'#172033',brand:'#5b5bd6'}}},plugins:[]};

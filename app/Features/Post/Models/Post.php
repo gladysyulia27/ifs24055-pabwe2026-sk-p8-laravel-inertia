@@ -1,0 +1,4 @@
+<?php
+namespace App\Features\Post\Models;
+use Illuminate\Database\Eloquent\Model;use Illuminate\Database\Eloquent\Relations\BelongsTo;use Illuminate\Support\Str;
+class Post extends Model {protected $fillable=['user_id','title','slug','category','excerpt','content','cover_image_path','is_published','published_at'];protected function casts():array{return ['is_published'=>'boolean','published_at'=>'datetime'];}public function user():BelongsTo{return $this->belongsTo(\App\Models\User::class);}protected static function booted():void{static::creating(function(Post $post){if(!$post->slug)$post->slug=static::uniqueSlug($post->title);});}public static function uniqueSlug(string $title,?int $ignore=null):string{$base=Str::slug($title)?:'artikel';$slug=$base;$i=1;while(static::where('slug',$slug)->when($ignore,fn($q)=>$q->where('id','!=',$ignore))->exists())$slug=$base.'-'.$i++;return $slug;}public function getRouteKeyName():string{return 'id';}}

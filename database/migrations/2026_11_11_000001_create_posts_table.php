@@ -1,0 +1,3 @@
+<?php
+use Illuminate\Database\Migrations\Migration;use Illuminate\Database\Schema\Blueprint;use Illuminate\Support\Facades\Schema;
+return new class extends Migration{public function up():void{Schema::create('posts',function(Blueprint $t){$t->id();$t->foreignId('user_id')->constrained()->cascadeOnDelete();$t->string('title');$t->string('slug')->unique();$t->string('category');$t->text('excerpt')->nullable();$t->longText('content');$t->string('cover_image_path')->nullable();$t->boolean('is_published')->default(false);$t->timestamp('published_at')->nullable();$t->timestamps();$t->index(['is_published','published_at']);$t->index('category');});}public function down():void{Schema::dropIfExists('posts');}};

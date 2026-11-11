@@ -1,0 +1,2 @@
+import React from 'react';import{createRoot}from'react-dom/client';import{createInertiaApp,router}from'@inertiajs/react';import '../css/app.css';
+createInertiaApp({title:title=>`${title} · BlogVerse Pro`,resolve:name=>{const pages=import.meta.glob('./Pages/**/*.jsx',{eager:true});return pages[`./Pages/${name}.jsx`].default;},setup({el,App,props}){createRoot(el).render(<App {...props}/>);},progress:{color:'#6558d3',showSpinner:false}});
