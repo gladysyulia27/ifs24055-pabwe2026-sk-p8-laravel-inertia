@@ -9,7 +9,7 @@ use App\Features\Post\Models\Post;
 use App\Features\Post\Policies\PostPolicy;
 use App\Features\Post\Repositories\PostRepository;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 use PDO;
 use Throwable;
@@ -26,28 +26,15 @@ class AppServiceProvider extends ServiceProvider
     {
         Gate::policy(Post::class, PostPolicy::class);
 
-        if (! $this->app->runningInConsole() && ! $this->app->runningUnitTests()) {
-            $request = request();
-            $host = $request->getHost();
-            if (
-                $request->isSecure()
-                || $request->header('X-Forwarded-Proto') === 'https'
-                || str_ends_with($host, '.s1if.cloud')
-                || str_starts_with((string) config('app.url'), 'https://')
-            ) {
-                URL::forceScheme('https');
-            }
-        }
+        Vite::createAssetPathsUsing(fn (string $path) => '/'.ltrim($path, '/'));
 
-        $this->ensureDatabaseReady();
+        if ($this->app->runningInConsole() && ! $this->app->runningUnitTests()) {
+            $this->ensureLocalDatabaseReady();
+        }
     }
 
-    private function ensureDatabaseReady(): void
+    private function ensureLocalDatabaseReady(): void
     {
-        if ($this->app->runningUnitTests()) {
-            return;
-        }
-
         $default = config('database.default');
 
         if ($default === 'sqlite') {
@@ -57,15 +44,20 @@ class AppServiceProvider extends ServiceProvider
         }
 
         if ($default === 'pgsql') {
+            $cfg = config('database.connections.pgsql');
+            $host = $cfg['host'] ?? '127.0.0.1';
+
+            // Jangan ubah konfigurasi database pada server deployment (mis. delcom-deployment-postgres)
+            if (! in_array($host, ['127.0.0.1', 'localhost'], true)) {
+                return;
+            }
+
             if (extension_loaded('pdo_pgsql')) {
-                $cfg = config('database.connections.pgsql');
-                $host = $cfg['host'] ?? '127.0.0.1';
                 $port = $cfg['port'] ?? '5432';
                 $db = $cfg['database'] ?? 'pabwe_p8_blog';
                 $user = $cfg['username'] ?? 'postgres';
                 $pass = $cfg['password'] ?? '';
 
-                // 1. Coba koneksi langsung ke database target (penting untuk server deployment seperti Delcom)
                 try {
                     new PDO(
                         "pgsql:host={$host};port={$port};dbname={$db}",
@@ -73,16 +65,15 @@ class AppServiceProvider extends ServiceProvider
                         $pass,
                         [
                             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                            PDO::ATTR_TIMEOUT => 3,
+                            PDO::ATTR_TIMEOUT => 2,
                         ]
                     );
 
                     return;
                 } catch (Throwable) {
-                    // Jika database belum ada di lokal, coba buat melalui maintenance db 'postgres'
+                    // Coba buat database lokal jika belum ada
                 }
 
-                // 2. Coba buat database jika belum ada (untuk environment lokal)
                 try {
                     $pdo = new PDO(
                         "pgsql:host={$host};port={$port};dbname=postgres",
@@ -104,18 +95,8 @@ class AppServiceProvider extends ServiceProvider
 
                     return;
                 } catch (Throwable) {
-                    // Fall through ke SQLite hanya jika PostgreSQL benar-benar tidak dapat diakses
+                    // Abaikan jika gagal
                 }
-            }
-
-            if (extension_loaded('pdo_sqlite')) {
-                $sqlitePath = $this->ensureSqliteFile();
-                config([
-                    'database.default' => 'sqlite',
-                    'database.connections.sqlite.database' => $sqlitePath,
-                    'queue.batching.database' => 'sqlite',
-                    'queue.failed.database' => 'sqlite',
-                ]);
             }
         }
     }

@@ -3,8 +3,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "postinstall": "node -e \"const fs=require('fs'),cp=require('child_process');if(!fs.existsSync('vendor/autoload.php')){try{cp.execSync('composer install --no-interaction',{stdio:'inherit'})}catch(e){}}if(!fs.existsSync('public/build/manifest.json')){try{cp.execSync('npm run build',{stdio:'inherit'})}catch(e){}}\""
+    "build": "vite build"
   },
   "dependencies": {
     "@inertiajs/react": "^2.0.0",
