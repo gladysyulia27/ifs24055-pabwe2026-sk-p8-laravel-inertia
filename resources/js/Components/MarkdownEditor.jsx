@@ -1,48 +1,89 @@
-import React, { useEffect, useRef } from 'react';
-import Editor from '@toast-ui/editor';
-import '@toast-ui/editor/dist/toastui-editor.css';
+import React, { useState } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 export default function MarkdownEditor({ value, onChange, height = '360px' }) {
-    const containerRef = useRef(null);
-    const editorRef = useRef(null);
+    const [tab, setTab] = useState('write');
+    const text = value || '';
 
-    useEffect(() => {
-        if (!containerRef.current) return;
+    const insertFormat = (prefix, suffix = '', placeholder = 'teks') => {
+        const next = `${text}${text && !text.endsWith('\n') ? '\n' : ''}${prefix}${placeholder}${suffix}`;
+        onChange?.(next);
+    };
 
-        const instance = new Editor({
-            el: containerRef.current,
-            initialValue: value || '',
-            previewStyle: 'vertical',
-            height,
-            initialEditType: 'markdown',
-            useCommandShortcut: true,
-            toolbarItems: [
-                ['heading', 'bold', 'italic', 'strike'],
-                ['hr', 'quote'],
-                ['ul', 'ol', 'task'],
-                ['link', 'table'],
-                ['code', 'codeblock'],
-            ],
-            events: {
-                change: () => {
-                    onChange?.(instance.getMarkdown() || '');
-                },
-            },
-        });
+    return (
+        <div className="markdown-editor" style={{ border: '1px solid #e9e9f0', borderRadius: '10px', overflow: 'hidden', background: '#fff' }}>
+            <div
+                style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: '6px',
+                    padding: '8px 10px',
+                    borderBottom: '1px solid #e9e9f0',
+                    background: '#f8f8fc',
+                    flexWrap: 'wrap',
+                }}
+            >
+                <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
+                    <button type="button" className="btn btn-outline btn-sm" onClick={() => insertFormat('## ', '', 'Subjudul')}>H</button>
+                    <button type="button" className="btn btn-outline btn-sm" onClick={() => insertFormat('**', '**', 'teks tebal')}><b>B</b></button>
+                    <button type="button" className="btn btn-outline btn-sm" onClick={() => insertFormat('*', '*', 'teks miring')}><i>I</i></button>
+                    <button type="button" className="btn btn-outline btn-sm" onClick={() => insertFormat('~~', '~~', 'coret')}><s>S</s></button>
+                    <button type="button" className="btn btn-outline btn-sm" onClick={() => insertFormat('> ', '', 'kutipan')}>“”</button>
+                    <button type="button" className="btn btn-outline btn-sm" onClick={() => insertFormat('- ', '', 'item daftar')}>• List</button>
+                    <button type="button" className="btn btn-outline btn-sm" onClick={() => insertFormat('[', '](https://)', 'tautan')}>Link</button>
+                    <button type="button" className="btn btn-outline btn-sm" onClick={() => insertFormat('```\n', '\n```', 'kode')}>{'</>'}</button>
+                </div>
+                <div style={{ display: 'flex', gap: '4px' }}>
+                    <button
+                        type="button"
+                        className={`btn btn-sm ${tab === 'write' ? 'btn-primary' : 'btn-outline'}`}
+                        onClick={() => setTab('write')}
+                    >
+                        Write
+                    </button>
+                    <button
+                        type="button"
+                        className={`btn btn-sm ${tab === 'preview' ? 'btn-primary' : 'btn-outline'}`}
+                        onClick={() => setTab('preview')}
+                    >
+                        Preview
+                    </button>
+                </div>
+            </div>
 
-        editorRef.current = instance;
-
-        return () => {
-            instance.destroy();
-            editorRef.current = null;
-        };
-    }, []);
-
-    useEffect(() => {
-        if (editorRef.current && editorRef.current.getMarkdown() !== (value || '')) {
-            editorRef.current.setMarkdown(value || '');
-        }
-    }, [value]);
-
-    return <div className="markdown-editor" ref={containerRef} />;
+            {tab === 'write' ? (
+                <textarea
+                    value={text}
+                    onChange={e => onChange?.(e.target.value)}
+                    placeholder="Tulis konten artikel dalam format Markdown..."
+                    style={{
+                        width: '100%',
+                        minHeight: height,
+                        border: 'none',
+                        padding: '14px',
+                        resize: 'vertical',
+                        outline: 'none',
+                        fontFamily: 'inherit',
+                        fontSize: '14px',
+                        lineHeight: '1.6',
+                    }}
+                />
+            ) : (
+                <div
+                    className="markdown-view"
+                    style={{
+                        minHeight: height,
+                        padding: '14px',
+                        overflowY: 'auto',
+                    }}
+                >
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                        {text || '*Belum ada konten untuk ditampilkan.*'}
+                    </ReactMarkdown>
+                </div>
+            )}
+        </div>
+    );
 }
