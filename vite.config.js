@@ -18,17 +18,6 @@ export default defineConfig({
     build: {
         sourcemap: true,
         cssCodeSplit: true,
-        rollupOptions: {
-            output: {
-                manualChunks(id) {
-                    if (id.includes('node_modules/react-markdown') || id.includes('node_modules/remark-') || id.includes('node_modules/micromark') || id.includes('node_modules/mdast-') || id.includes('node_modules/hast-') || id.includes('node_modules/unified')) {
-                        return 'markdown';
-                    }
-                    if (id.includes('node_modules/lucide-react')) {
-                        return 'icons';
-                    }
-                },
-            },
-        },
+        modulePreload: false,
     },
 });
