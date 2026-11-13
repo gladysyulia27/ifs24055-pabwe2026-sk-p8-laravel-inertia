@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\EnsureAuthenticated;
 use App\Http\Middleware\EnsurePostOwnership;
 use App\Http\Middleware\EnsureRole;
 use App\Http\Middleware\HandleInertiaRequests;
@@ -17,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->redirectGuestsTo('/login');
         $middleware->web(append: [HandleInertiaRequests::class]);
         $middleware->alias([
+            'auth' => EnsureAuthenticated::class,
             'role' => EnsureRole::class,
             'post.owner' => EnsurePostOwnership::class,
         ]);

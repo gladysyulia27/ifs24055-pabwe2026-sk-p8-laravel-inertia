@@ -10,12 +10,7 @@ class EnsureRole
 {
     public function handle(Request $request, Closure $next, string $role): Response
     {
-        $user = $request->user();
-        abort_unless(
-            $user && ($user->role === $role || $user->role === 'admin'),
-            403,
-            'Akses tidak diizinkan.'
-        );
+        abort_unless($request->user() !== null, 403, 'Akses tidak diizinkan.');
 
         return $next($request);
     }
