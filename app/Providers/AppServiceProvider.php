@@ -9,6 +9,7 @@ use App\Features\Post\Models\Post;
 use App\Features\Post\Policies\PostPolicy;
 use App\Features\Post\Repositories\PostRepository;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 use PDO;
@@ -27,6 +28,23 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Post::class, PostPolicy::class);
 
         Vite::createAssetPathsUsing(fn (string $path) => '/'.ltrim($path, '/'));
+
+        if (! $this->app->runningInConsole() && ! $this->app->runningUnitTests()) {
+            $request = request();
+            $host = $request->getHost();
+            $forwardedProto = strtolower((string) $request->header('X-Forwarded-Proto', ''));
+
+            if (
+                $request->isSecure()
+                || $forwardedProto === 'https'
+                || str_ends_with($host, '.s1if.cloud')
+                || str_starts_with((string) config('app.url'), 'https://')
+            ) {
+                $request->server->set('HTTPS', 'on');
+                $request->server->set('SERVER_PORT', 443);
+                URL::forceScheme('https');
+            }
+        }
 
         if ($this->app->runningInConsole() && ! $this->app->runningUnitTests()) {
             $this->ensureLocalDatabaseReady();
