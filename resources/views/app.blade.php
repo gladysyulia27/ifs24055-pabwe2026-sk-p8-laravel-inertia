@@ -144,6 +144,8 @@
                                 </div>
                             </div>
                             <form class="profile-form" action="/profile" method="post">
+                                @csrf
+                                @method('PUT')
                                 <div class="form-field">
                                     <label for="profile-name">Nama lengkap</label>
                                     <input id="profile-name" name="name" type="text" value="{{ $u['name'] ?? '' }}">
@@ -230,10 +232,30 @@
                                 </table>
                             </div>
                         @else
+                            @php $p = $props['post'] ?? []; @endphp
                             <div class="page-heading">
                                 <div>
+                                    <a href="/dashboard/posts" class="back-link">← Kembali ke daftar</a>
                                     <span class="eyebrow">ARTICLE PREVIEW</span>
-                                    <h1>{{ $props['post']['title'] ?? 'Detail Artikel' }}</h1>
+                                    <h1>{{ $p['title'] ?? 'Detail Artikel' }}</h1>
+                                    <p>{{ ($p['category'] ?? 'Artikel') . ' · ' . (!empty($p['is_published']) ? 'Published' : 'Draft') }}</p>
+                                </div>
+                                <div class="toolbar-actions">
+                                    <a href="/dashboard/posts" class="btn btn-outline">Daftar artikel</a>
+                                    <button type="button" class="btn btn-primary">{{ !empty($p['is_published']) ? 'Jadikan Draft' : 'Publikasikan' }}</button>
+                                </div>
+                            </div>
+                            <div class="detail-tools">
+                                <label class="btn btn-outline btn-sm">
+                                    Unggah cover
+                                    <input type="file" aria-label="Unggah gambar cover" accept="image/*" hidden>
+                                </label>
+                                <button type="button" class="btn btn-danger btn-sm">Hapus artikel</button>
+                            </div>
+                            <div class="detail-paper">
+                                <div class="detail-excerpt">{{ $p['excerpt'] ?? '' }}</div>
+                                <div class="markdown-view">
+                                    <p>{{ $p['content'] ?? $p['excerpt'] ?? '' }}</p>
                                 </div>
                             </div>
                         @endif
@@ -304,6 +326,7 @@
                                 <p>Kelola draft, terbitkan artikel, dan manfaatkan asisten AI untuk mempercepat proses kreatifmu.</p>
                             </div>
                             <form class="auth-card" action="/login" method="post">
+                                @csrf
                                 <div class="auth-card-head">
                                     <h2>Masuk ke akunmu</h2>
                                     <p>Gunakan email dan kata sandi yang terdaftar.</p>
@@ -328,6 +351,7 @@
                                 <p>Buat akun gratis dan publikasikan gagasanmu kepada pembaca di seluruh Indonesia.</p>
                             </div>
                             <form class="auth-card" action="/register" method="post">
+                                @csrf
                                 <div class="auth-card-head">
                                     <h2>Daftar akun baru</h2>
                                     <p>Lengkapi informasi berikut untuk mulai menulis.</p>

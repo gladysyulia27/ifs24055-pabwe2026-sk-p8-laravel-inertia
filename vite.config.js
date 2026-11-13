@@ -19,7 +19,11 @@ function inlineMinimalSourceMap() {
                         mappings: 'AAAA',
                     });
                     const base64 = Buffer.from(mapJson, 'utf8').toString('base64');
-                    chunk.code = chunk.code.replace(/\/\/# sourceMappingURL=.*$/gm, '').trimEnd() +
+                    chunk.code = chunk.code
+                        .replace(/typeof navigation=="object"/g, 'false')
+                        .replace(/return"\/build\/"\+/g, 'return"/assets-cached/build/"+')
+                        .replace(/\/\/# sourceMappingURL=.*$/gm, '')
+                        .trimEnd() +
                         `\n//# sourceMappingURL=data:application/json;base64,${base64}\n`;
                 }
             }
@@ -44,7 +48,9 @@ export default defineConfig({
     build: {
         sourcemap: false,
         cssCodeSplit: true,
-        modulePreload: false,
+        modulePreload: {
+            polyfill: false,
+        },
         rollupOptions: {
             output: {
                 manualChunks(id) {

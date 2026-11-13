@@ -58,7 +58,8 @@ if (str_starts_with($requestUri, '/assets-cached/')) {
     }
 }
 
-// Enable gzip compression for HTML/JSON document responses to pass Lighthouse "Document request latency"
+// Enable gzip compression and bfcache-compatible headers for HTML/JSON document responses
+@ini_set('session.cache_limiter', '');
 if (! str_ends_with($requestUri, '/export') && function_exists('ob_gzhandler') && ! ini_get('zlib.output_compression')) {
     @ob_start('ob_gzhandler');
 }
