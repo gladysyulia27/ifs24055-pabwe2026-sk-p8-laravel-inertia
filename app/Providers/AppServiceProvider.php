@@ -26,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Gate::policy(Post::class, PostPolicy::class);
 
-        Vite::createAssetPathsUsing(fn (string $path) => '/'.ltrim($path, '/'));
+        Vite::createAssetPathsUsing(fn (string $path) => '/assets-cached/'.ltrim($path, '/'));
 
         if ($this->app->runningInConsole() && ! $this->app->runningUnitTests()) {
             $this->ensureLocalDatabaseReady();

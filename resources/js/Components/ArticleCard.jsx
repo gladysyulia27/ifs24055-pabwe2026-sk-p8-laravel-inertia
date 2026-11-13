@@ -1,1 +1,44 @@
-import React from'react';import{Link}from'@inertiajs/react';import{ArrowUpRight,Clock}from'lucide-react';export default function ArticleCard({post}){return <article className="article-card"><Link href={`/articles/${post.slug}`} className="article-cover">{post.cover_image_path?<img src={`/storage/${post.cover_image_path}`} alt=""/>:<div className="cover-placeholder"><span>{post.category}</span><b>{post.title.slice(0,1)}</b></div>}<span className="category-tag">{post.category}</span></Link><div className="article-card-body"><div className="article-meta">{post.user?.name||'BlogVerse Writer'} <span>·</span> {post.published_at?new Date(post.published_at).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'}):'Draft'}</div><h3><Link href={`/articles/${post.slug}`}>{post.title}</Link></h3><p>{post.excerpt}</p><Link href={`/articles/${post.slug}`} className="read-link">Baca artikel <ArrowUpRight size={15}/></Link></div></article>}
+import React from 'react';
+import { Link } from '@inertiajs/react';
+import { ArrowUpRight } from 'lucide-react';
+
+export default function ArticleCard({ post, HeadingTag = 'h3' }) {
+    return (
+        <article className="article-card">
+            <Link
+                href={`/articles/${post.slug}`}
+                className="article-cover"
+                aria-label={`Baca artikel ${post.title}`}
+            >
+                {post.cover_image_path ? (
+                    <img src={`/storage/${post.cover_image_path}`} alt={post.title} loading="lazy" />
+                ) : (
+                    <div className="cover-placeholder" aria-hidden="true">
+                        <span>{post.category}</span>
+                        <b>{post.title.slice(0, 1)}</b>
+                    </div>
+                )}
+                <span className="category-tag">{post.category}</span>
+            </Link>
+            <div className="article-card-body">
+                <div className="article-meta">
+                    {post.user?.name || 'BlogVerse Writer'} <span>·</span>{' '}
+                    {post.published_at
+                        ? new Date(post.published_at).toLocaleDateString('id-ID', {
+                            day: 'numeric',
+                            month: 'short',
+                            year: 'numeric',
+                        })
+                        : 'Draft'}
+                </div>
+                <HeadingTag>
+                    <Link href={`/articles/${post.slug}`}>{post.title}</Link>
+                </HeadingTag>
+                <p>{post.excerpt}</p>
+                <Link href={`/articles/${post.slug}`} className="read-link">
+                    Baca artikel <ArrowUpRight size={15} aria-hidden="true" />
+                </Link>
+            </div>
+        </article>
+    );
+}

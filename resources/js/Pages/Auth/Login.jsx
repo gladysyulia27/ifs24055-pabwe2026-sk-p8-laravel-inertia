@@ -34,7 +34,7 @@ export default function Login() {
                 <div className="auth-art">
                     <div className="auth-art-content">
                         <span className="eyebrow">WELCOME BACK</span>
-                        <h2>Ide hebat dimulai dari satu halaman.</h2>
+                        <div className="auth-art-heading">Ide hebat dimulai dari satu halaman.</div>
                         <p>Lanjutkan membaca, menulis, dan berbagi hal-hal yang bermakna.</p>
                         <div className="auth-quote">
                             “The more that you read, the more things you will know.”

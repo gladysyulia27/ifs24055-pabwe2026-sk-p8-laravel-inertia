@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-export default function MarkdownEditor({ value, onChange, height = '360px' }) {
+export default function MarkdownEditor({ id = 'post-content-input', value, onChange, height = '360px' }) {
     const [tab, setTab] = useState('write');
     const text = value || '';
 
@@ -12,7 +12,7 @@ export default function MarkdownEditor({ value, onChange, height = '360px' }) {
     };
 
     return (
-        <div className="markdown-editor" style={{ border: '1px solid #e9e9f0', borderRadius: '10px', overflow: 'hidden', background: '#fff' }}>
+        <div className="markdown-editor" style={{ border: '1px solid #cfcfe0', borderRadius: '10px', overflow: 'hidden', background: '#fff' }}>
             <div
                 style={{
                     display: 'flex',
@@ -20,20 +20,20 @@ export default function MarkdownEditor({ value, onChange, height = '360px' }) {
                     justifyContent: 'space-between',
                     gap: '6px',
                     padding: '8px 10px',
-                    borderBottom: '1px solid #e9e9f0',
+                    borderBottom: '1px solid #e2e2ec',
                     background: '#f8f8fc',
                     flexWrap: 'wrap',
                 }}
             >
                 <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
-                    <button type="button" className="btn btn-outline btn-sm" onClick={() => insertFormat('## ', '', 'Subjudul')}>H</button>
-                    <button type="button" className="btn btn-outline btn-sm" onClick={() => insertFormat('**', '**', 'teks tebal')}><b>B</b></button>
-                    <button type="button" className="btn btn-outline btn-sm" onClick={() => insertFormat('*', '*', 'teks miring')}><i>I</i></button>
-                    <button type="button" className="btn btn-outline btn-sm" onClick={() => insertFormat('~~', '~~', 'coret')}><s>S</s></button>
-                    <button type="button" className="btn btn-outline btn-sm" onClick={() => insertFormat('> ', '', 'kutipan')}>“”</button>
-                    <button type="button" className="btn btn-outline btn-sm" onClick={() => insertFormat('- ', '', 'item daftar')}>• List</button>
-                    <button type="button" className="btn btn-outline btn-sm" onClick={() => insertFormat('[', '](https://)', 'tautan')}>Link</button>
-                    <button type="button" className="btn btn-outline btn-sm" onClick={() => insertFormat('```\n', '\n```', 'kode')}>{'</>'}</button>
+                    <button type="button" className="btn btn-outline btn-sm" aria-label="Tambah Subjudul" onClick={() => insertFormat('## ', '', 'Subjudul')}>H</button>
+                    <button type="button" className="btn btn-outline btn-sm" aria-label="Teks Tebal" onClick={() => insertFormat('**', '**', 'teks tebal')}><b>B</b></button>
+                    <button type="button" className="btn btn-outline btn-sm" aria-label="Teks Miring" onClick={() => insertFormat('*', '*', 'teks miring')}><i>I</i></button>
+                    <button type="button" className="btn btn-outline btn-sm" aria-label="Teks Coret" onClick={() => insertFormat('~~', '~~', 'coret')}><s>S</s></button>
+                    <button type="button" className="btn btn-outline btn-sm" aria-label="Kutipan" onClick={() => insertFormat('> ', '', 'kutipan')}>“”</button>
+                    <button type="button" className="btn btn-outline btn-sm" aria-label="Daftar Poin" onClick={() => insertFormat('- ', '', 'item daftar')}>• List</button>
+                    <button type="button" className="btn btn-outline btn-sm" aria-label="Tautan" onClick={() => insertFormat('[', '](https://)', 'tautan')}>Link</button>
+                    <button type="button" className="btn btn-outline btn-sm" aria-label="Blok Kode" onClick={() => insertFormat('```\n', '\n```', 'kode')}>{'</>'}</button>
                 </div>
                 <div style={{ display: 'flex', gap: '4px' }}>
                     <button
@@ -55,6 +55,8 @@ export default function MarkdownEditor({ value, onChange, height = '360px' }) {
 
             {tab === 'write' ? (
                 <textarea
+                    id={id}
+                    aria-label="Konten artikel"
                     value={text}
                     onChange={e => onChange?.(e.target.value)}
                     placeholder="Tulis konten artikel dalam format Markdown..."

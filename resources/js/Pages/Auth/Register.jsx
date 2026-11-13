@@ -37,7 +37,7 @@ export default function Register() {
                 <div className="auth-art register-art">
                     <div className="auth-art-content">
                         <span className="eyebrow">CREATE SOMETHING MEANINGFUL</span>
-                        <h2>Suaramu layak untuk didengar.</h2>
+                        <div className="auth-art-heading">Suaramu layak untuk didengar.</div>
                         <p>Mulai perjalanan menulismu. Bagikan ide, pengalaman, dan pengetahuan kepada dunia.</p>
                         <div className="auth-quote">
                             “There is no greater agony than bearing an untold story inside you.”
