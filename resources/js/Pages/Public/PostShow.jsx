@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from '@inertiajs/react';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+import SimpleMarkdown from '../../Components/SimpleMarkdown';
 import PublicLayout from '../../Layouts/PublicLayout';
 import { ArrowLeft, ArrowUpRight, Clock } from 'lucide-react';
 
@@ -43,7 +42,7 @@ export default function PostShow({ post }) {
                     />
                 )}
                 <div className="markdown-view">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{post.content}</ReactMarkdown>
+                    <SimpleMarkdown>{post.content}</SimpleMarkdown>
                 </div>
                 <div className="reading-community">
                     <div className="community-icon" aria-hidden="true">✳</div>

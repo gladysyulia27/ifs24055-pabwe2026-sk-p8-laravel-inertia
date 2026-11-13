@@ -1,8 +1,7 @@
 import React from 'react';
 import { Link, router } from '@inertiajs/react';
 import DashboardLayout from '../../Layouts/DashboardLayout';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+import SimpleMarkdown from '../../Components/SimpleMarkdown';
 import { ArrowLeft, Globe, Trash2, ImagePlus } from 'lucide-react';
 
 export default function Show({ post }) {
@@ -72,7 +71,7 @@ export default function Show({ post }) {
             <div className="detail-paper">
                 <div className="detail-excerpt">{post.excerpt}</div>
                 <div className="markdown-view">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{post.content}</ReactMarkdown>
+                    <SimpleMarkdown>{post.content}</SimpleMarkdown>
                 </div>
             </div>
         </DashboardLayout>

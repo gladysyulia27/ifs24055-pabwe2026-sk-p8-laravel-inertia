@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+import SimpleMarkdown from './SimpleMarkdown';
 
 export default function MarkdownEditor({ id = 'post-content-input', value, onChange, height = '360px' }) {
     const [tab, setTab] = useState('write');
@@ -81,9 +80,9 @@ export default function MarkdownEditor({ id = 'post-content-input', value, onCha
                         overflowY: 'auto',
                     }}
                 >
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    <SimpleMarkdown>
                         {text || '*Belum ada konten untuk ditampilkan.*'}
-                    </ReactMarkdown>
+                    </SimpleMarkdown>
                 </div>
             )}
         </div>

@@ -31,6 +31,7 @@ if (str_starts_with($requestUri, '/assets-cached/')) {
         $etag = '"'.md5_file($targetFile).'"';
         header('Content-Type: '.($mimeTypes[$ext] ?? 'application/octet-stream'));
         header('Cache-Control: public, max-age=31536000, immutable');
+        header('Access-Control-Allow-Origin: *');
         header('ETag: '.$etag);
         header('Vary: Accept-Encoding');
 
@@ -55,6 +56,11 @@ if (str_starts_with($requestUri, '/assets-cached/')) {
         readfile($targetFile);
         exit;
     }
+}
+
+// Enable gzip compression for HTML/JSON document responses to pass Lighthouse "Document request latency"
+if (! str_ends_with($requestUri, '/export') && function_exists('ob_gzhandler') && ! ini_get('zlib.output_compression')) {
+    @ob_start('ob_gzhandler');
 }
 
 // Determine if the application is in maintenance mode...

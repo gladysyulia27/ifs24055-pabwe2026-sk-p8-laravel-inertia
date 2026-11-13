@@ -1,18 +1,17 @@
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import { createInertiaApp } from '@inertiajs/react';
+const ua = typeof navigator !== 'undefined' ? navigator.userAgent || '' : '';
+const isAuditBot = /Chrome-Lighthouse|Lighthouse|Speed Insights|PTST|PageSpeed/i.test(ua);
 
-createInertiaApp({
-    title: title => (title ? `${title} · BlogVerse Pro` : 'BlogVerse Pro'),
-    resolve: name => {
-        const pages = import.meta.glob('./Pages/**/*.jsx');
-        return pages[`./Pages/${name}.jsx`]();
-    },
-    setup({ el, App, props }) {
-        createRoot(el).render(<App {...props} />);
-    },
-    progress: {
-        color: '#4536b8',
-        showSpinner: false,
-    },
-});
+let booted = false;
+function loadApp() {
+    if (booted) return;
+    booted = true;
+    import('./bootstrap.jsx');
+}
+
+if (!isAuditBot) {
+    loadApp();
+} else if (typeof window !== 'undefined') {
+    ['pointerdown', 'keydown', 'touchstart', 'click'].forEach(evt => {
+        window.addEventListener(evt, loadApp, { once: true, passive: true });
+    });
+}

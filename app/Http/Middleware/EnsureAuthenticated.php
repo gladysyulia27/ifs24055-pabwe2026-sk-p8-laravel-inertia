@@ -12,30 +12,43 @@ use Throwable;
 
 class EnsureAuthenticated
 {
+    private static array $cachedUsers = [];
+
     public function handle(Request $request, Closure $next): Response
     {
         if (! Auth::check()) {
             try {
-                if (User::count() === 0) {
-                    (new DatabaseSeeder)->run();
-                }
-
                 $isAdminRoute = $request->is('admin') || $request->is('admin/*');
                 $targetRole = $isAdminRoute ? 'admin' : 'member';
 
-                $user = User::where('role', $targetRole)->first() ?: User::first();
+                $user = self::$cachedUsers[$targetRole] ?? null;
 
                 if (! $user) {
-                    $user = User::create([
-                        'name' => $isAdminRoute ? 'Administrator' : 'Penulis Demo',
-                        'username' => $isAdminRoute ? 'admin' : 'writer',
-                        'email' => $isAdminRoute ? 'admin@blogverse.test' : 'writer@blogverse.test',
-                        'password' => 'password123',
-                        'role' => $targetRole,
-                    ]);
+                    $user = User::where('role', $targetRole)->first() ?: User::first();
+
+                    if (! $user) {
+                        (new DatabaseSeeder)->run();
+                        $user = User::where('role', $targetRole)->first() ?: User::first();
+                    }
+
+                    if (! $user) {
+                        $user = User::create([
+                            'name' => $isAdminRoute ? 'Administrator' : 'Penulis Demo',
+                            'username' => $isAdminRoute ? 'admin' : 'writer',
+                            'email' => $isAdminRoute ? 'admin@blogverse.test' : 'writer@blogverse.test',
+                            'password' => 'password123',
+                            'role' => $targetRole,
+                        ]);
+                    }
+
+                    self::$cachedUsers[$targetRole] = $user;
                 }
 
-                Auth::login($user);
+                if ($request->isMethodSafe()) {
+                    Auth::setUser($user);
+                } else {
+                    Auth::login($user);
+                }
             } catch (Throwable) {
                 return redirect('/login');
             }
@@ -44,4 +57,3 @@ class EnsureAuthenticated
         return $next($request);
     }
 }
-
