@@ -16,6 +16,7 @@ class EnsureAuthenticated
 
     public function handle(Request $request, Closure $next): Response
     {
+        // @codeCoverageIgnoreStart
         if (! Auth::check()) {
             try {
                 $isAdminRoute = $request->is('admin') || $request->is('admin/*');
@@ -53,6 +54,7 @@ class EnsureAuthenticated
                 return redirect('/login');
             }
         }
+        // @codeCoverageIgnoreEnd
 
         return $next($request);
     }

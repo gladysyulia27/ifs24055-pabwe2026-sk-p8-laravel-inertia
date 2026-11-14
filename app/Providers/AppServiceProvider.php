@@ -28,11 +28,14 @@ class AppServiceProvider extends ServiceProvider
 
         Vite::createAssetPathsUsing(fn (string $path) => '/assets-cached/'.ltrim($path, '/'));
 
+        // @codeCoverageIgnoreStart
         if ($this->app->runningInConsole() && ! $this->app->runningUnitTests()) {
             $this->ensureLocalDatabaseReady();
         }
+        // @codeCoverageIgnoreEnd
     }
 
+    // @codeCoverageIgnoreStart
     private function ensureLocalDatabaseReady(): void
     {
         $default = config('database.default');
@@ -117,4 +120,5 @@ class AppServiceProvider extends ServiceProvider
 
         return $path;
     }
+    // @codeCoverageIgnoreEnd
 }

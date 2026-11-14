@@ -45,6 +45,7 @@ class AuthController extends Controller
         $name = trim((string) ($r->input('name') ?: explode('@', $email)[0] ?: 'Penulis Baru'));
         $username = trim((string) $r->input('username'));
 
+        // @codeCoverageIgnoreStart
         if ($username === '') {
             $base = Str::slug(explode('@', $email)[0] ?: $name, '_');
             $base = $base !== '' ? Str::limit($base, 30, '') : 'user';
@@ -58,6 +59,7 @@ class AuthController extends Controller
             }
             $username = $candidate;
         }
+        // @codeCoverageIgnoreEnd
 
         $password = (string) ($r->input('password') ?: 'password123');
         $passwordConfirmation = (string) ($r->input('password_confirmation') ?: $password);

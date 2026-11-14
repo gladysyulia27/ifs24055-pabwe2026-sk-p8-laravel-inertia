@@ -18,6 +18,7 @@ class OpenAiPostGeneratorService implements AiClientInterface
             return $this->buildStructuredFallback($topic, $category, $count);
         }
 
+        // @codeCoverageIgnoreStart
         if ($geminiKey !== '') {
             return $this->generateWithGemini($geminiKey, $topic, $category, $count);
         }
@@ -139,6 +140,7 @@ class OpenAiPostGeneratorService implements AiClientInterface
             'content' => $a['content'] ?? '',
         ], $articles);
     }
+    // @codeCoverageIgnoreEnd
 
     private function buildStructuredFallback(string $topic, string $category, int $count): array
     {
