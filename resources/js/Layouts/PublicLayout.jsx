@@ -42,11 +42,10 @@ export default function PublicLayout({ children }) {
                                 <button
                                     type="button"
                                     className="user-chip"
-                                    aria-label={`Menu akun ${user.name}`}
                                     aria-expanded={userMenu}
                                     onClick={() => setUserMenu(!userMenu)}
                                 >
-                                    <span className="avatar-mini">{user.name?.[0]}</span>
+                                    <span className="avatar-mini" aria-hidden="true">{user.name?.[0]}</span>
                                     <span>{user.name}</span>
                                     <span aria-hidden="true">⌄</span>
                                 </button>

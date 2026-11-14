@@ -8,7 +8,6 @@ export default function ArticleCard({ post, HeadingTag = 'h3' }) {
             <Link
                 href={`/articles/${post.slug}`}
                 className="article-cover"
-                aria-label={`Baca artikel ${post.title} - ${post.category}`}
             >
                 {post.cover_image_path ? (
                     <img src={`/storage/${post.cover_image_path}`} alt={post.title} loading="lazy" />
@@ -18,7 +17,10 @@ export default function ArticleCard({ post, HeadingTag = 'h3' }) {
                         <b>{post.title.slice(0, 1)}</b>
                     </div>
                 )}
-                <span className="category-tag" aria-hidden="true">{post.category}</span>
+                <span style={{ position: 'absolute', width: '1px', height: '1px', overflow: 'hidden', clip: 'rect(0,0,0,0)' }}>
+                    Baca artikel {post.title} -{' '}
+                </span>
+                <span className="category-tag">{post.category}</span>
             </Link>
             <div className="article-card-body">
                 <div className="article-meta">

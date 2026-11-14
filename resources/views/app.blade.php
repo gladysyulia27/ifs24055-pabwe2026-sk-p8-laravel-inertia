@@ -390,7 +390,7 @@
                         <div class="top-actions">
                             @if($authUser)
                                 <div class="user-menu-wrap">
-                                    <a href="{{ ($authUser['role'] ?? '') === 'admin' ? '/admin/users' : '/dashboard/posts' }}" class="user-chip" aria-label="Menu akun {{ $authUser['name'] ?? 'Pengguna' }}">
+                                    <a href="{{ ($authUser['role'] ?? '') === 'admin' ? '/admin/users' : '/dashboard/posts' }}" class="user-chip">
                                         <span class="avatar-mini" aria-hidden="true">{{ substr($authUser['name'] ?? 'U', 0, 1) }}</span>
                                         <span>{{ $authUser['name'] ?? 'Pengguna' }}</span>
                                     </a>
@@ -603,12 +603,13 @@
                             <div class="article-grid">
                                 @forelse($postsList as $post)
                                     <article class="article-card">
-                                        <a href="/articles/{{ $post['slug'] ?? '' }}" class="article-cover" aria-label="Baca artikel {{ $post['title'] ?? '' }} - {{ $post['category'] ?? 'Artikel' }}">
+                                        <a href="/articles/{{ $post['slug'] ?? '' }}" class="article-cover">
                                             <div class="cover-placeholder" aria-hidden="true">
                                                 <span>{{ $post['category'] ?? 'Artikel' }}</span>
                                                 <b>{{ substr($post['title'] ?? 'B', 0, 1) }}</b>
                                             </div>
-                                            <span class="category-tag" aria-hidden="true">{{ $post['category'] ?? 'Artikel' }}</span>
+                                            <span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Baca artikel {{ $post['title'] ?? '' }} - </span>
+                                            <span class="category-tag">{{ $post['category'] ?? 'Artikel' }}</span>
                                         </a>
                                         <div class="article-card-body">
                                             <div class="article-meta">
