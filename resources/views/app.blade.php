@@ -62,14 +62,14 @@
                             </div>
                             <form action="/logout" method="post" style="display:inline">
                                 @csrf
-                                <button type="submit" title="Keluar" aria-label="Keluar dari akun">↪</button>
+                                <button type="submit" title="Keluar" aria-label="Keluar dari akun"><span aria-hidden="true">↪</span></button>
                             </form>
                         </div>
                     </div>
                 </aside>
                 <main class="dash-main" id="main-content">
                     <header class="dash-top">
-                        <button type="button" class="mobile-toggle dark" aria-label="Buka menu samping" aria-expanded="false">☰</button>
+                        <button type="button" class="mobile-toggle dark" aria-label="Buka menu samping" aria-expanded="false"><span aria-hidden="true">☰</span></button>
                         <div>
                             <span class="crumb">WORKSPACE / </span>
                             <b>{{ $dashTitle }}</b>
@@ -166,7 +166,7 @@
                                                 </td>
                                                 <td class="date-cell">{{ !empty($p['updated_at']) ? substr($p['updated_at'], 0, 10) : '—' }}</td>
                                                 <td class="row-actions">
-                                                    <button type="button" class="icon-button" aria-label="Menu aksi untuk {{ $p['title'] ?? '' }}" aria-expanded="false">⋮</button>
+                                                    <button type="button" class="icon-button" aria-label="Menu aksi untuk {{ $p['title'] ?? '' }}" aria-expanded="false"><span aria-hidden="true">⋮</span></button>
                                                 </td>
                                             </tr>
                                         @empty
@@ -391,7 +391,7 @@
                             @if($authUser)
                                 <div class="user-menu-wrap">
                                     <a href="{{ ($authUser['role'] ?? '') === 'admin' ? '/admin/users' : '/dashboard/posts' }}" class="user-chip" aria-label="Menu akun {{ $authUser['name'] ?? 'Pengguna' }}">
-                                        <span class="avatar-mini">{{ substr($authUser['name'] ?? 'U', 0, 1) }}</span>
+                                        <span class="avatar-mini" aria-hidden="true">{{ substr($authUser['name'] ?? 'U', 0, 1) }}</span>
                                         <span>{{ $authUser['name'] ?? 'Pengguna' }}</span>
                                     </a>
                                 </div>
@@ -399,7 +399,7 @@
                                 <a href="/login" class="nav-login">Masuk</a>
                                 <a href="/register" class="btn btn-primary btn-sm">Mulai Menulis <span aria-hidden="true">↗</span></a>
                             @endif
-                            <button type="button" class="mobile-toggle" aria-label="Buka menu navigasi" aria-expanded="false">☰</button>
+                            <button type="button" class="mobile-toggle" aria-label="Buka menu navigasi" aria-expanded="false"><span aria-hidden="true">☰</span></button>
                         </div>
                     </div>
                 </header>
@@ -603,12 +603,12 @@
                             <div class="article-grid">
                                 @forelse($postsList as $post)
                                     <article class="article-card">
-                                        <a href="/articles/{{ $post['slug'] ?? '' }}" class="article-cover" aria-label="Baca artikel {{ $post['title'] ?? '' }}">
+                                        <a href="/articles/{{ $post['slug'] ?? '' }}" class="article-cover" aria-label="Baca artikel {{ $post['title'] ?? '' }} - {{ $post['category'] ?? 'Artikel' }}">
                                             <div class="cover-placeholder" aria-hidden="true">
                                                 <span>{{ $post['category'] ?? 'Artikel' }}</span>
                                                 <b>{{ substr($post['title'] ?? 'B', 0, 1) }}</b>
                                             </div>
-                                            <span class="category-tag">{{ $post['category'] ?? 'Artikel' }}</span>
+                                            <span class="category-tag" aria-hidden="true">{{ $post['category'] ?? 'Artikel' }}</span>
                                         </a>
                                         <div class="article-card-body">
                                             <div class="article-meta">
